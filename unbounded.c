@@ -3,10 +3,10 @@
 #include<stdlib.h>
 #include<string.h>
 #define PI 3.1415926
-#define STEPS 1000000
-#define DT 0.001f
-#define WIDTH 512
-#define HEIGHT 512
+#define STEPS 1000000000
+#define DT 0.01f
+#define WIDTH 4000
+#define HEIGHT 4000
 #define DT_MIN 0.01
 #define T_MIN 0.5
 
@@ -25,40 +25,34 @@ unsigned char image[HEIGHT][WIDTH][3];
 
 int main ()
 {
-    float posx = (float)rand()/(float)(RAND_MAX);
-    float posy = (float)rand()/(float)(RAND_MAX);
+    float posx = 10.0f;
+    float posy = 7.0f;
     char* imageFileName = (char*) "bitmapImage.bmp";
-    float t0 = (float)rand()/(float)(RAND_MAX/T_MIN);
-    float t1 = (float)rand()/(float)(RAND_MAX/T_MIN);
-    float t2 = (float)rand()/(float)(RAND_MAX/T_MIN);
-    float t3 = (float)rand()/(float)(RAND_MAX/T_MIN);
-    float dt0 = (float)rand()/(float)(RAND_MAX/0.001);
-    float dt1 = (float)rand()/(float)(RAND_MAX/0.001);
-    float dt2 = (float)rand()/(float)(RAND_MAX/0.001);
-    float dt3 = (float)rand()/(float)(RAND_MAX/0.001);
+    float t0 = 7;
+    float t1 = 2;
+    float t2 = 4;
+    float t3 = 1;
     
 
     for(long i = 0; i < STEPS; i++){
-        float tmpx = posx + DT*cosf(t0+posy+cosf((t1+posx)*PI));
-        float tmpy = posy - DT*cosf(t2+posx+cosf((t3+posy)*PI));
-        posx =  (tmpx - (int)tmpx);
-        posy = (tmpy - (int)tmpy);
-        density[(int)((HEIGHT/2)*posx+(HEIGHT/2))][(int)((WIDTH/2)*posy+(WIDTH/2))] += 0.5;
-        t0 += 0.00123395;
-        t1 += 0.00132752035;
-        t2 += 0.00215705;
-        t3 += 0.03830;
-        if(i%(STEPS/500)==0 && i > 0){
+        posx += DT*cosf(t0+posy+cosf(t1+(posx)*PI));
+        posy += DT*cosf(t2+posx+cosf(t3+(posy)*PI));
+        density[(int)(posx+(HEIGHT/2))][(int)(posy+(WIDTH/2))] += 0.25;
+        t0 += 0.014237909;
+        t1 += 0.04723041;
+        t2 -= 0.02384092384;
+        t3 += 0.0628394;
+        if(i%(STEPS/15)==0 && i > 0){
             for (int i = 0; i < HEIGHT; i++) {
                 for (int j = 0; j < WIDTH; j++) {
                         image[i][j][0] = tanhf(density[i][j])*255;
-                        image[i][j][1] = tanhf(density[i][j])*200;
-                        image[i][j][2] = tanhf(density[i][j])*155;
+                        image[i][j][1] = tanhf(density[i][j])*255;
+                        image[i][j][2] = tanhf(density[i][j])*255;
                 }
             }
             frame ++;
             char buf[255];
-            sprintf(buf, "%d.bmp", frame);
+            sprintf(buf, "frame_%d.bmp", frame);
 
             generateBitmapImage((unsigned char*) image, HEIGHT, WIDTH, buf);
             printf("%ld\n", i);
