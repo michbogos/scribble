@@ -48,7 +48,7 @@ int main ()
         t1 += 0.00132752035;
         t2 += 0.00215705;
         t3 += 0.03830;
-        if(i%(STEPS/500)==0 && i > 0){
+        if(i%(STEPS/50)==0 && i > 0){
             for (int i = 0; i < HEIGHT; i++) {
                 for (int j = 0; j < WIDTH; j++) {
                         image[i][j][0] = tanhf(density[i][j])*255;
